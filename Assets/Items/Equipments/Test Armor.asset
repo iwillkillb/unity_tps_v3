@@ -17,5 +17,5 @@ MonoBehaviour:
   isDefaultItem: 0
   equipSlot: 1
   mesh: {fileID: 0}
-  armorModifier: 2
-  damageModifier: 0
+  attackModifier: 0
+  defenseModifier: 2

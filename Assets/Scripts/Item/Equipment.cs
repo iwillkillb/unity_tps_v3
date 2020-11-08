@@ -7,8 +7,8 @@ public class Equipment : Item
 {
     public EquipmentPart equipSlot;
     public SkinnedMeshRenderer mesh;
-    public int armorModifier;
-    public int damageModifier;
+    public int attackModifier;
+    public int defenseModifier;
 
     public override void Use()
     {

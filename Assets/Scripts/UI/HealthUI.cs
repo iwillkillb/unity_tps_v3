@@ -32,7 +32,7 @@ public class HealthUI : MonoBehaviour
             }
         }
 
-        GetComponent<CharacterStats>().OnHealthChanged += OnHealthChanged;
+        GetComponent<CharacterStats>().OnHPChanged += OnHPChanged;
     }
 
     // Update is called once per frame
@@ -50,7 +50,7 @@ public class HealthUI : MonoBehaviour
         }
     }
 
-    void OnHealthChanged(float maxHealth, float currentHealth)
+    void OnHPChanged(int maxHP, int currentHP)
     {
         if (ui == null)
             return;
@@ -59,7 +59,7 @@ public class HealthUI : MonoBehaviour
 
         lastMadeVisibleTime = Time.time;
 
-        float healthPercent = currentHealth / maxHealth;
+        float healthPercent = (float)currentHP / maxHP;
         healthSlider.fillAmount = healthPercent;
 
         if (healthPercent <= 0)

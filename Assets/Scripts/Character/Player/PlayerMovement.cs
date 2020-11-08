@@ -11,11 +11,15 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Move")]
     public float movementSpeed = 7f;
+    public float moveAxisSlerp = 5f;
     public float slopeForce = 5f;
     float verticalVelocity = 0f;
+    float currentSlopeForce = 0f;
+    float axisHor, axisVer;
 
     [Header("Rotation")]
     public float rotationSpeed = 5f;
+    float rotationAngleDifference = 0f;
 
     [Header("Jump")]
     public float gravity = 9.81f;
@@ -31,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     public string apMove = "move";
     public string apDirection = "direction";
     public string apIsGrounded = "isGrounded";
+    public string apVVelocity = "vVelocity";
 
     void Awake()
     {
@@ -42,12 +47,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // input axis lerp
+        axisHor = Mathf.Lerp(axisHor, playerInput.axisHor, Time.deltaTime * moveAxisSlerp);
+        axisVer = Mathf.Lerp(axisVer, playerInput.axisVer, Time.deltaTime * moveAxisSlerp);
+
         SetVerticalVelocity(playerInput.axisJump);
-        Movement(playerInput.axisHor, playerInput.axisVer);
-        Rotation(playerInput.axisHor, playerInput.axisVer, playerInput.axisAttack);
+        Movement(axisHor, axisVer);
+        Rotation(axisHor, axisVer, playerInput.axisAttack);
         Dash();
 
-        SetAnimationParameter(playerInput.axisHor, playerInput.axisVer, playerInput.axisAttack);
+        SetAnimationParameter(axisHor, axisVer, playerInput.axisAttack);
     }
 
     void SetVerticalVelocity(bool axisJump)
@@ -78,9 +87,8 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 // Slope check
-                float currentSlopeForce = 0f;
-                if (GetGroundNormal() != Vector3.up)
-                    currentSlopeForce = slopeForce;
+                currentSlopeForce = (GetGroundNormal() != Vector3.up) ? slopeForce : 0f;
+
                 if (verticalVelocity > -gravity)
                     verticalVelocity -= currentSlopeForce;
             }
@@ -153,6 +161,19 @@ public class PlayerMovement : MonoBehaviour
         else if (axisHor != 0f || axisVer != 0f)
         {
             newRot = Quaternion.Euler(Vector3.up * (inputAngle + Camera.main.transform.eulerAngles.y));
+
+            // Get angle's difference between Current euler angle and Goal euler angle. (-180 ~ 180)
+            rotationAngleDifference = inputAngle + Camera.main.transform.eulerAngles.y - transform.eulerAngles.y;
+            if (rotationAngleDifference > 180f)
+                rotationAngleDifference -= 360f;
+            else if (rotationAngleDifference < -180f)
+                rotationAngleDifference += 360f;
+        }
+        else
+        {
+            // Initialization in stoppint time
+            if (rotationAngleDifference != 0f)
+                rotationAngleDifference = 0f;
         }
 
         // Actual Rotation
@@ -187,7 +208,6 @@ public class PlayerMovement : MonoBehaviour
         if (isStaringFront)
         {
             animator.SetFloat(apMove, axisVer);
-            animator.SetFloat(apDirection, axisHor);
         }
         else
         {
@@ -195,6 +215,8 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat(apMove, Mathf.Max(Mathf.Abs(axisHor), Mathf.Abs(axisVer)), 0.1f, Time.deltaTime);
         }
 
+        animator.SetFloat(apDirection, rotationAngleDifference / 180f);
+        animator.SetFloat(apVVelocity, verticalVelocity);
         animator.SetBool(apIsGrounded, characterController.isGrounded);
     }
 

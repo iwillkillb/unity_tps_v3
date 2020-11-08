@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public GameObject shooter;
-    public float damage = 10f;
+    public int damage = 10;
     public float speed = 10f;
     public LayerMask blockLayers;
     public GameObject collisionEffect;

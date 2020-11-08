@@ -6,14 +6,16 @@ public class CharacterStats : MonoBehaviour
 {
     public Ragdoll ragdoll;
 
-    [Header("Health")]
-    public float maxHealth = 100;
-    public float currentHealth { get; private set; }
-    public event System.Action<float, float> OnHealthChanged;
+    [Header("HP/MP")]
+    public int maxHP = 100;
+    public int maxMP = 100;
+    public int currentHP { get; private set; }
+    public int currentMP { get; private set; }
+    public event System.Action<int, int> OnHPChanged;
 
     [Header("Stat")]
-    public Stat damage;
-    public Stat armor;
+    public Stat attack;
+    public Stat defense;
 
     [Header("Attack")]
     public float attackSpeed = 1f;
@@ -25,8 +27,9 @@ public class CharacterStats : MonoBehaviour
 
     private void OnEnable()
     {
-        // HP Initialization
-        currentHealth = maxHealth;
+        // Initialization
+        currentHP = maxHP;
+        currentMP = maxMP;
     }
 
     private void Update()
@@ -37,17 +40,17 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        damage -= armor.GetValue();
+        damage -= defense.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
-        currentHealth -= damage;
+        currentHP -= damage;
         Debug.Log(transform.name + " takes " + damage + "damage.");
 
-        OnHealthChanged(maxHealth, currentHealth);
+        OnHPChanged(maxHP, currentHP);
 
-        if (currentHealth <= 0)
+        if (currentHP <= 0)
         {
             Die();
         }
@@ -96,6 +99,6 @@ public class CharacterStats : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        stats.TakeDamage(damage.GetValue());
+        stats.TakeDamage(attack.GetValue());
     }
 }

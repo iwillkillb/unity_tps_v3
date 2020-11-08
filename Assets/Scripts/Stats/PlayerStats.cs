@@ -11,20 +11,21 @@ public class PlayerStats : CharacterStats
     }
 
     // Update is called once per frame
-    void OnEquipmentChanged(int slotIndex, Equipment newItem, Equipment oldItem)
+    void OnEquipmentChanged(int slotIndex, Equipment item, bool isGetting)
     {
-        if (newItem != null)
+        if (isGetting)
         {
-            armor.AddModifier(newItem.armorModifier);
-            damage.AddModifier(newItem.damageModifier);
-            Debug.Log("Plus  " + newItem.name + " -> armor : " + newItem.armorModifier + " / damage : " + newItem.damageModifier);
+            // Add Item
+            defense.AddModifier(item.defenseModifier);
+            attack.AddModifier(item.attackModifier);
+            Debug.Log("Plus  " + item.name + " -> defense : " + item.defenseModifier + " / attack : " + item.attackModifier);
         }
-
-        if (oldItem != null)
+        else
         {
-            armor.RemoveModifier(oldItem.armorModifier);
-            damage.RemoveModifier(oldItem.damageModifier);
-            Debug.Log("Minus " + oldItem.name + " -> armor : " + oldItem.armorModifier + " / damage : " + oldItem.damageModifier);
+            // Remove Item
+            defense.RemoveModifier(item.defenseModifier);
+            attack.RemoveModifier(item.attackModifier);
+            Debug.Log("Minus " + item.name + " -> defense : " + item.defenseModifier + " / attack : " + item.attackModifier);
         }
     }
 

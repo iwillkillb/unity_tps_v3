@@ -18,7 +18,7 @@ public class EquipmentManager : MonoBehaviour
     }
     #endregion
 
-    public delegate void OnEquipmentChanged(int slotIndex, Equipment newItem, Equipment oldItem);
+    public delegate void OnEquipmentChanged(int slotIndex, Equipment item, bool isGetting);
     public OnEquipmentChanged onEquipmentChanged;
 
     //public SkinnedMeshRenderer targetMesh;  // Equipments user(Player)'s modeling mesh.
@@ -67,7 +67,7 @@ public class EquipmentManager : MonoBehaviour
         // Callback
         if (onEquipmentChanged != null)
         {
-            onEquipmentChanged.Invoke(slotIndex, newItem, null);
+            onEquipmentChanged.Invoke(slotIndex, newItem, true);
         }
     }
 
@@ -98,7 +98,7 @@ public class EquipmentManager : MonoBehaviour
             // Callback
             if (onEquipmentChanged != null)
             {
-                onEquipmentChanged.Invoke(slotIndex, null, oldItem);
+                onEquipmentChanged.Invoke(slotIndex, oldItem, false);
             }
 
             return oldItem;

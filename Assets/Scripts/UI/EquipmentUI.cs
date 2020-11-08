@@ -29,7 +29,7 @@ public class EquipmentUI : MonoBehaviour
             // UI is Initialized before activating.
             if (equipmentUI.activeSelf == false)
             {
-                UpdateUI(0, null, null);
+                UpdateUI(0, null, true);
             }
 
             // UI Activate
@@ -37,28 +37,28 @@ public class EquipmentUI : MonoBehaviour
         }
     }
 
-    void UpdateUI(int slotIndex, Item newItem, Item oldItem)
+    void UpdateUI(int slotIndex, Item item, bool isGetting)
     {
         Debug.Log("Equipment UI Callback");
 
-        // Add item
-        if (newItem != null && oldItem == null)
+        if (isGetting)
         {
-            slots[slotIndex].AddItem(newItem);
+            // Add item
+            // If item is null, then update ui only.
+            if (item != null)
+                slots[slotIndex].AddItem(item);
         }
-        // Remove item
-        else if (newItem == null && oldItem != null)
+        else
         {
+            // Remove item
             slots[slotIndex].ClearSlot();
         }
+
         // Refresh UI
-        else if (newItem == null && oldItem == null)
+        for (int i = 0; i < slots.Length; i++)
         {
-            for (int i = 0; i < slots.Length; i++)
-            {
-                if (slots[i].GetItem() == null)
-                    slots[i].ClearSlot();
-            }
+            if (slots[i].GetItem() == null)
+                slots[i].ClearSlot();
         }
     }
 

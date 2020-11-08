@@ -30,7 +30,6 @@ public class PlayerCamera : MonoBehaviour
 
     [Header("Transform Connection")]
     public Transform cam;               // Camera's moving position by zooming
-    public Transform joint;             // Camera's rotation
     public Transform FarestPoint;       // Camera's farest position
     public Transform NearestPoint;      // Camera's nearest position
 
@@ -126,7 +125,7 @@ public class PlayerCamera : MonoBehaviour
         if (useRotationYLimit)
             angleYAxis = Mathf.Clamp(angleYAxis, minYAxis, maxYAxis);
 
-        joint.localRotation = Quaternion.Euler(angleXAxis, angleYAxis, 0f);
+        transform.rotation = Quaternion.Euler(angleXAxis, angleYAxis, 0f);
 
         // Camera Collision Check and Zoom ---------------------------------------------------------------
 
@@ -143,16 +142,16 @@ public class PlayerCamera : MonoBehaviour
         float zoomAxisByDistanceToCollider = 1f;
 
         Vector3 camPosByZoomAxis = Vector3.Lerp(NearestPoint.position, FarestPoint.position, zoomAxis);
-        float lengthOfZoomLine = Vector3.Distance(joint.position, camPosByZoomAxis);    // Length of camera's zooming line
+        float lengthOfZoomLine = Vector3.Distance(transform.position, camPosByZoomAxis);    // Length of camera's zooming line
 
         // Is there Terrain? Check collider.
-        if (Physics.Linecast(joint.position, camPosByZoomAxis, out hit, terrainLayerMask))
+        if (Physics.Linecast(transform.position, camPosByZoomAxis, out hit, terrainLayerMask))
         {
             // Lesser Zoom Axis -> Near
             zoomAxisByDistanceToCollider = hit.distance / lengthOfZoomLine;
         }
 
-        cam.position = Vector3.Lerp(joint.position, camPosByZoomAxis, zoomAxisByDistanceToCollider);
+        cam.position = Vector3.Lerp(transform.position, camPosByZoomAxis, zoomAxisByDistanceToCollider);
         // -----------------------------------------------------------------------------------------------
     }
 }
