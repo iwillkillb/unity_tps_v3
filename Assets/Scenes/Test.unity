@@ -2429,6 +2429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 7
+  moveAxisSlerp: 5
   slopeForce: 5
   rotationSpeed: 5
   gravity: 9.81

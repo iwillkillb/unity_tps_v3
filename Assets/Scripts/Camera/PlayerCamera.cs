@@ -34,7 +34,7 @@ public class PlayerCamera : MonoBehaviour
     public Transform NearestPoint;      // Camera's nearest position
 
     [Header("Terrain Check")]
-    public LayerMask terrainLayerMask;
+    public LayerMask terrainLayerMask;  // Don't put target's layer in terrainLayerMask!!
     RaycastHit hit;
 
     // Input
@@ -51,19 +51,14 @@ public class PlayerCamera : MonoBehaviour
     // Camera's rotation sequence
     // Angle -> Quaternion -> Transform
     [Header("Rotation")]
-    public bool useRotationXLimit = true;
+    public float rotationSpeed = 5f;
     [Range(-90f, 0f)] public float minXAxis = -45f;           // X Axis has limit.
     [Range(0f, 90f)] public float maxXAxis = 75f;
     float angleXAxis;
-    public bool useRotationYLimit = false;
-    [Range(-180f, 0f)] public float minYAxis = -90f;           // X Axis has limit.
-    [Range(0f, 180f)] public float maxYAxis = 90f;
     float angleYAxis;
-    public float rotationSensitivity = 2f;
 
     [Header("Zoom")]
-    [Range(0f, 1f)] public float zoomAxisMin = 0f;
-    [Range(0f, 1f)] public float zoomAxisMax = 1f;
+    public float radiusFromCollision = 0.1f;
     float zoomAxis = 1f;                    // Default zoom axis, Nearest : 0
 
 
@@ -106,52 +101,34 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        // Positioning
-        if (currentTarget != null)
-            transform.position = currentTarget.position;
-
         // Shift Key -> Camera Stop
         if (Input.GetKey(KeyCode.LeftShift))
         {
             return;
         }
 
-        // XY Axis Rotation (with clamping)
-        angleXAxis -= inputAxisY * rotationSensitivity;
-        if (useRotationXLimit)
-            angleXAxis = Mathf.Clamp(angleXAxis, minXAxis, maxXAxis);
+        // Positioning
+        if (currentTarget != null)
+            transform.position = currentTarget.position;
 
-        angleYAxis += inputAxisX * rotationSensitivity;
-        if (useRotationYLimit)
-            angleYAxis = Mathf.Clamp(angleYAxis, minYAxis, maxYAxis);
-
+        // Rotation
+        angleXAxis -= inputAxisY * rotationSpeed;
+        angleXAxis = Mathf.Clamp(angleXAxis, minXAxis, maxXAxis);
+        angleYAxis += inputAxisX * rotationSpeed;
         transform.rotation = Quaternion.Euler(angleXAxis, angleYAxis, 0f);
 
-        // Camera Collision Check and Zoom ---------------------------------------------------------------
-
-        // 1. Input
-        // 2. Check collider in camera zoom line
-        // 3. Compare Zoom axis by collision to Default zoom axis.
-        // 4. Select lesser one.
-
-        // Take Input.
-        zoomAxis = Mathf.Clamp(zoomAxis - inputAxisZ, zoomAxisMin, zoomAxisMax);
-
-        // Is there something(Without itself) between camera and character?
-        // Don't put target's layer in terrainLayerMask!!
-        float zoomAxisByDistanceToCollider = 1f;
-
+        // Zooming
+        zoomAxis -= inputAxisZ;
         Vector3 camPosByZoomAxis = Vector3.Lerp(NearestPoint.position, FarestPoint.position, zoomAxis);
-        float lengthOfZoomLine = Vector3.Distance(transform.position, camPosByZoomAxis);    // Length of camera's zooming line
+        float distanceToCam = Vector3.Distance(transform.position, camPosByZoomAxis);    // Distance to Camera Position
 
-        // Is there Terrain? Check collider.
-        if (Physics.Linecast(transform.position, camPosByZoomAxis, out hit, terrainLayerMask))
+        // Collision Check
+        float zoomAxisByDistanceToCollider = 1f;
+        if (Physics.SphereCast(transform.position, radiusFromCollision, camPosByZoomAxis - transform.position, out hit, distanceToCam, terrainLayerMask))
         {
             // Lesser Zoom Axis -> Near
-            zoomAxisByDistanceToCollider = hit.distance / lengthOfZoomLine;
+            zoomAxisByDistanceToCollider = hit.distance / distanceToCam;
         }
-
         cam.position = Vector3.Lerp(transform.position, camPosByZoomAxis, zoomAxisByDistanceToCollider);
-        // -----------------------------------------------------------------------------------------------
     }
 }
