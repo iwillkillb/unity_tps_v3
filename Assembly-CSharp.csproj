@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Game Manager\SkillManager.cs" />
     <Compile Include="Assets\Scripts\UI\HealthUI.cs" />
     <Compile Include="Assets\Scripts\Interactable\ItemPickup.cs" />
+    <Compile Include="Assets\Scripts\Test\PlayerMovementAni.cs" />
     <Compile Include="Assets\Scripts\Interactable\Enemy.cs" />
     <Compile Include="Assets\Scripts\Effect\Lifetime.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraIsometricView.cs" />
