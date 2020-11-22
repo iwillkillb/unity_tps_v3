@@ -1690,7 +1690,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3303,7 +3303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6593,7 +6593,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7429,7 +7429,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10358,7 +10358,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11258,7 +11258,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11325,15 +11325,10 @@ MonoBehaviour:
     m_Bits: 1
   target: {fileID: 814405287}
   targetAfterDied: {fileID: 778502204}
-  useRotationXLimit: 1
+  rotationSpeed: 5
   minXAxis: -45
   maxXAxis: 75
-  useRotationYLimit: 0
-  minYAxis: -90
-  maxYAxis: 90
-  rotationSensitivity: 5
-  zoomAxisMin: 0
-  zoomAxisMax: 1
+  radiusFromCollision: 0.1
 --- !u!4 &1552523959
 Transform:
   m_ObjectHideFlags: 0
@@ -13739,15 +13734,10 @@ MonoBehaviour:
     m_Bits: 1
   target: {fileID: 814405287}
   targetAfterDied: {fileID: 778502204}
-  useRotationXLimit: 1
+  rotationSpeed: 5
   minXAxis: -45
   maxXAxis: 75
-  useRotationYLimit: 0
-  minYAxis: -90
-  maxYAxis: 90
-  rotationSensitivity: 5
-  zoomAxisMin: 0
-  zoomAxisMax: 1
+  radiusFromCollision: 0.1
 --- !u!4 &2023664243
 Transform:
   m_ObjectHideFlags: 0
@@ -13926,7 +13916,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14022,7 +14012,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b20ab5a1fbe1da4e9dcb97c04524eae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

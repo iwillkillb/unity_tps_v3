@@ -78,7 +78,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Shot()
     {
-        // Delay reset
+        // Cooldown reset
         if (cooldown > 0f)
         {
             return;

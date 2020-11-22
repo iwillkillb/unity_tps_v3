@@ -28,8 +28,15 @@ public class PlayerStats : CharacterStats
             Debug.Log("Minus " + item.name + " -> defense : " + item.defenseModifier + " / attack : " + item.attackModifier);
         }
     }
+    
+    // Player kill itself
+    // PlayerStats.Die() -> ragdoll.ToggleRagdoll(true)
+    // -> PlayerManager.Die() -> player.SetActive(false)
 
-    // PlayerStats.Die() -> PlayerManager.Die() -> (REVIVE?) -> PlayerManager.Revive() -> Player's CharacterStats.Revive()
+    // Player is revived by Game Manager
+    // PlayerManager.Revive() -> player.SetActive(true)
+    // -> Player's CharacterStats.Revive() -> ragdoll.ToggleRagdoll(false)
+
     public override void Die()
     {
         base.Die();

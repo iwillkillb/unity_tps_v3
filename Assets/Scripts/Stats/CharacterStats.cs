@@ -78,7 +78,7 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    // ==================================================================================
+    // Not Use ==========================================================
 
     public void Attack(CharacterStats targetStats)
     {
@@ -95,6 +95,7 @@ public class CharacterStats : MonoBehaviour
         OnAttack();
 
     }
+
     IEnumerator DoDamage(CharacterStats stats, float delay)
     {
         yield return new WaitForSeconds(delay);

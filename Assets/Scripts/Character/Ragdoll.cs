@@ -10,6 +10,8 @@ public class Ragdoll : MonoBehaviour
     Collider[] boneColliders;
     Rigidbody[] boneRigidbodies;
 
+    public bool isPlayerObjectRagdoll = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,11 +27,8 @@ public class Ragdoll : MonoBehaviour
 
     public void ToggleRagdoll(bool state)
     {
-        // Ragdoll -> Animator off
+        // Ragdoll on -> Animator off
         animator.enabled = !state;
-
-        //parentBackup.GetComponent<PlayerMovementCC>().enabled = !state;
-        //parentBackup.GetComponent<CharacterController>().enabled = !state;
 
         // Parent setting : Don't chase parent's movement.
         // Position reset
@@ -40,26 +39,31 @@ public class Ragdoll : MonoBehaviour
         }
         else
         {
-            // Return
-            transform.parent = parentBackup;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-            transform.localScale = Vector3.one;
+            if (!isPlayerObjectRagdoll)
+            {
+                // Reset Ragdoll
+                transform.parent = parentBackup;
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+                transform.localScale = Vector3.one;
+            }
         }
 
         // Collider and Rigidbody setting
         foreach (Rigidbody rigi in boneRigidbodies)
         {
+            // Except myself
+            if (rigi.transform == transform)
+                continue;
+
             rigi.isKinematic = !state;
-            /*
-            if (state)
-            {
-                rigi.AddExplosionForce(10f, transform.position + Vector3.up, 1f, 0f, ForceMode.VelocityChange);
-                //rigi.AddForce(parentBackup.forward * 10f, ForceMode.VelocityChange);
-            }*/
         }
         foreach (Collider bone in boneColliders)
         {
+            // Except myself
+            if (bone.transform == transform)
+                continue;
+
             bone.enabled = state;
         }
     }

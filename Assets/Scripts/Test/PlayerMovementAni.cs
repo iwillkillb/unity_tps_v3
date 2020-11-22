@@ -14,15 +14,17 @@ public class PlayerMovementAni : MonoBehaviour
     public LayerMask terrainLayer;
     public Transform groundCheckPoint;
     public float groundCheckRadius = 0.1f;
-    public float slopeCheckDistance = 0.1f;
-    public float wallCheckDistance = 0.1f;
     bool isGrounded;
+
+    public float slopeCheckDistance = 0.1f;
+
+    public Transform wallCheckPoint;
+    public float wallCheckRadius = 0.5f;
 
     [Header("Move")]
     public bool isStaringFront = false;
     [Range(0f, 1f)] public float runAxis = 0f;
     public float slopeForce = 5f;
-    float currentSlopeForce = 0f;
 
     [Header("Rotation")]
     public float rotationSpeed = 2f;
@@ -53,10 +55,11 @@ public class PlayerMovementAni : MonoBehaviour
         // Ground Check
         isGrounded = Physics.CheckSphere(groundCheckPoint.position, groundCheckRadius, terrainLayer);
         animator.SetBool("isGrounded", isGrounded);
-        
+
         Movement(playerInput.axisHor, playerInput.axisVer, isStaringFront);
         Rotation(playerInput.axisHor, playerInput.axisVer, isStaringFront);
-        
+
+
     }
 
     Vector3 GetGroundNormal()
@@ -73,30 +76,48 @@ public class PlayerMovementAni : MonoBehaviour
         return groundNormal;
     }
 
+    bool WallCheck()
+    {
+        if (Physics.CheckSphere(wallCheckPoint.position, wallCheckRadius, terrainLayer))
+            return true;
+
+        return false;
+    }
+
     void Movement(float axisHor, float axisVer, bool isStaringFront)
     {
         runAxis += Input.GetAxis("Mouse ScrollWheel");
         runAxis = Mathf.Clamp01(runAxis);
 
+        float animParaHor = axisHor;
+        float animParaVer = axisVer;
+
         // Movement
-        if (isStaringFront)
-        {
-            // If you staring front, you can't run.
-            animator.SetFloat("h", axisHor, 0.2f, Time.deltaTime);
-            animator.SetFloat("v", axisVer, 0.2f, Time.deltaTime);
-        }
-        else
+        if (!isStaringFront)
         {
             if (animator.GetFloat("h") != 0f)
-                animator.SetFloat("h", 0f, 0.2f, Time.deltaTime);
-            animator.SetFloat("v", Mathf.Max(Mathf.Abs(axisHor), Mathf.Abs(axisVer)) * (runAxis + 1f), 0.2f, Time.deltaTime);
+                animParaHor = 0f;
+            animParaVer = Mathf.Max(Mathf.Abs(axisHor), Mathf.Abs(axisVer)) * (runAxis + 1f);
         }
+
+        // Set Parameter
+        animator.SetFloat("h", animParaHor, 0.2f, Time.deltaTime);
+
+        // Aerial Wall Check -> Zero Speed
+        if (!isGrounded && WallCheck())
+            animator.SetFloat("v", 0f);
+        else
+            animator.SetFloat("v", animParaVer, 0.2f, Time.deltaTime);
 
         // Jump : Move to upward, If you are on a slope, add slopeForce to jumpHeight.
         if (isGrounded && playerInput.axisJump)
         {
             animator.SetTrigger("jump");
-            rigidbody.AddRelativeForce(Vector3.up * (jumpHeight + currentSlopeForce), ForceMode.VelocityChange);
+
+            Vector3 jumpVelocity = rigidbody.velocity;
+            jumpVelocity.y = jumpHeight;
+            rigidbody.velocity = jumpVelocity;
+            //rigidbody.AddRelativeForce(Vector3.up * (jumpHeight + currentSlopeForce), ForceMode.VelocityChange);
         }
 
         // Aerial : Move to forward
@@ -109,15 +130,7 @@ public class PlayerMovementAni : MonoBehaviour
         Vector3 groundNormal = GetGroundNormal();
         if (groundNormal != Vector3.up && Vector3.Cross(transform.right, groundNormal).y < 0f)
         {
-            // Use slope force
-            currentSlopeForce = slopeForce;
-            rigidbody.AddRelativeForce(Vector3.down * currentSlopeForce, ForceMode.VelocityChange);
-        }
-        else
-        {
-            // Reset slope force
-            if (currentSlopeForce != 0f)
-                currentSlopeForce = 0f;
+            rigidbody.AddRelativeForce(Vector3.down * slopeForce, ForceMode.VelocityChange);
         }
     }
 
@@ -162,5 +175,24 @@ public class PlayerMovementAni : MonoBehaviour
 
         // Actual Rotation : Lean to the terrain + Rotate by direction of movement.
         transform.rotation = Quaternion.Slerp(transform.rotation, newRot, rotationSpeed * Time.deltaTime);
+    }
+
+    bool WallCheck(float axisHor, float axisVer)
+    {
+        if ((axisHor != 0f || axisVer != 0f) && !isGrounded)
+        {
+            Vector3 capsuleCastPoint1 = transform.position + capsuleCollider.center - (Vector3.up * (capsuleCollider.height * 0.5f - capsuleCollider.radius * 2f));
+            Vector3 capsuleCastPoint2 = transform.position + capsuleCollider.center + (Vector3.up * (capsuleCollider.height * 0.5f - capsuleCollider.radius * 2f));
+
+            // Aerial collision
+            if (Physics.CapsuleCast(capsuleCastPoint1, capsuleCastPoint2, capsuleCollider.radius, transform.forward, wallCheckRadius, terrainLayer))
+            {
+                Debug.Log("WALL CHECK");
+                return true;
+            }
+        }
+
+        // No Movement -> No Collision
+        return false;
     }
 }
