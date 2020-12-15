@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInput))]
-public class PlayerShooting : MonoBehaviour
+public class PlayerShooting : PlayerBehaviour
 {
     // Components
     PlayerInput playerInput;
@@ -30,8 +30,11 @@ public class PlayerShooting : MonoBehaviour
         currentDelay = delay;
     }
 
-    void FixedUpdate()
+    void Update()
     {
+        if (!enableFunction)
+            return;
+
         if (cooldown > 0f)
         {
             cooldown -= Time.deltaTime;
@@ -56,6 +59,8 @@ public class PlayerShooting : MonoBehaviour
                 currentDelay = delay;
         }
     }
+
+
 
     Quaternion GetAimRotation()
     {

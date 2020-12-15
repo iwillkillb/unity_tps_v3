@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class PlayerManager : MonoBehaviour
 {
     public GameObject player;
-    public bool isPlayerObjectRagdoll = false;
 
     #region Singletone
     public static PlayerManager instance;
@@ -35,9 +34,6 @@ public class PlayerManager : MonoBehaviour
             onPlayerDied.Invoke();
         }
 
-        if (!isPlayerObjectRagdoll)
-            player.SetActive(false);
-
         // Revive after 5 seconds.
         Invoke("Revive", 5f);
 
@@ -51,9 +47,7 @@ public class PlayerManager : MonoBehaviour
             onPlayerRevived.Invoke();
         }
 
-        if (!isPlayerObjectRagdoll)
-            player.SetActive(true);
-
-        player.GetComponent<CharacterStats>().Revive();
+        if (player.GetComponent<CharacterStats>() != null)
+            player.GetComponent<CharacterStats>().Revive();
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovementAni : MonoBehaviour
+public class PlayerMovementAni : PlayerBehaviour
 {
     // Components
     Animator animator;
@@ -52,14 +52,19 @@ public class PlayerMovementAni : MonoBehaviour
 
     void Update()
     {
+        if (!enableFunction)
+        {
+            animator.SetFloat("h", 0f);
+            animator.SetFloat("v", 0f);
+            return;
+        }
+
         // Ground Check
         isGrounded = Physics.CheckSphere(groundCheckPoint.position, groundCheckRadius, terrainLayer);
         animator.SetBool("isGrounded", isGrounded);
 
         Movement(playerInput.axisHor, playerInput.axisVer, isStaringFront);
         Rotation(playerInput.axisHor, playerInput.axisVer, isStaringFront);
-
-
     }
 
     Vector3 GetGroundNormal()
@@ -175,24 +180,5 @@ public class PlayerMovementAni : MonoBehaviour
 
         // Actual Rotation : Lean to the terrain + Rotate by direction of movement.
         transform.rotation = Quaternion.Slerp(transform.rotation, newRot, rotationSpeed * Time.deltaTime);
-    }
-
-    bool WallCheck(float axisHor, float axisVer)
-    {
-        if ((axisHor != 0f || axisVer != 0f) && !isGrounded)
-        {
-            Vector3 capsuleCastPoint1 = transform.position + capsuleCollider.center - (Vector3.up * (capsuleCollider.height * 0.5f - capsuleCollider.radius * 2f));
-            Vector3 capsuleCastPoint2 = transform.position + capsuleCollider.center + (Vector3.up * (capsuleCollider.height * 0.5f - capsuleCollider.radius * 2f));
-
-            // Aerial collision
-            if (Physics.CapsuleCast(capsuleCastPoint1, capsuleCastPoint2, capsuleCollider.radius, transform.forward, wallCheckRadius, terrainLayer))
-            {
-                Debug.Log("WALL CHECK");
-                return true;
-            }
-        }
-
-        // No Movement -> No Collision
-        return false;
     }
 }

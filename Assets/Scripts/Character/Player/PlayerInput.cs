@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : PlayerBehaviour
 {
     // Input field
     public float axisHor { get; set; }
@@ -13,19 +13,16 @@ public class PlayerInput : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
+        if (!enableFunction)
+            return;
+
         axisHor = Input.GetAxis("Horizontal");
         axisVer = Input.GetAxis("Vertical");
         axisJump = Input.GetButtonDown("Jump");
         axisAttack = Input.GetMouseButton(0);
         axisInteract = Input.GetMouseButton(1);
     }
+
 }

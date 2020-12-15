@@ -16,8 +16,9 @@ public class EquipmentUI : MonoBehaviour
 
         // Size of slots == Count of EquipmentPart.
         slots = equipmentUI.transform.GetComponentsInChildren<InventorySlot>();
-        //slots = new InventorySlot[System.Enum.GetNames(typeof(EquipmentPart)).Length];
 
+        // Off Equipment UI
+        equipmentUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,8 +40,6 @@ public class EquipmentUI : MonoBehaviour
 
     void UpdateUI(int slotIndex, Item item, bool isGetting)
     {
-        Debug.Log("Equipment UI Callback");
-
         if (isGetting)
         {
             // Add item

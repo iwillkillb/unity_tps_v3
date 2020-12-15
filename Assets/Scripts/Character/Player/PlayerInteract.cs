@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInteract : MonoBehaviour
+public class PlayerInteract : PlayerBehaviour
 {
     public Interactable focus;
     public float range = 1f;
 
-    // Update is called once per frame
     void Update()
     {
+        if (!enableFunction)
+            return;
+
         // Left click -> Focus on Object.
         if (Input.GetMouseButtonDown(1))
         {

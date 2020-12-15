@@ -9,6 +9,7 @@ public class InventoryUI : MonoBehaviour
     Inventory inventory;
     InventorySlot[] slots;
     public GameObject inventoryUI;  // Parent of slots.
+    public GameObject inventorySlotPrefab;
 
 
 
@@ -17,10 +18,18 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         inventory.onItemChangedCallBack += UpdateUI;
 
+        for(int i=0; i<inventory.space; i++)
+        {
+            Instantiate(inventorySlotPrefab, inventoryUI.transform);
+        }
+
         slots = inventoryUI.transform.GetComponentsInChildren<InventorySlot>();
 
         // Inventory UI Initialization
         UpdateUI();
+
+        // Off Inventory
+        inventoryUI.SetActive(false);
     }
 
 

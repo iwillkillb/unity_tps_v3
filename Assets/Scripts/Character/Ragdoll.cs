@@ -10,10 +10,8 @@ public class Ragdoll : MonoBehaviour
     Collider[] boneColliders;
     Rigidbody[] boneRigidbodies;
 
-    public bool isPlayerObjectRagdoll = false;
-
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         parentBackup = transform.parent;
 
@@ -21,7 +19,7 @@ public class Ragdoll : MonoBehaviour
         boneColliders = GetComponentsInChildren<Collider>();
         boneRigidbodies = GetComponentsInChildren<Rigidbody>();
 
-        // Initialization
+        // Initialization : Off Ragdoll
         ToggleRagdoll(false);
     }
 
@@ -35,18 +33,17 @@ public class Ragdoll : MonoBehaviour
         if (state)
         {
             // Be Ragdoll
-            transform.parent = null;
+            transform.parent = parentBackup;
         }
         else
         {
-            if (!isPlayerObjectRagdoll)
-            {
-                // Reset Ragdoll
-                transform.parent = parentBackup;
-                transform.localPosition = Vector3.zero;
-                transform.localRotation = Quaternion.identity;
-                transform.localScale = Vector3.one;
-            }
+            /*
+            // Reset Ragdoll
+            transform.parent = parentBackup;
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+            */
         }
 
         // Collider and Rigidbody setting
@@ -54,17 +51,17 @@ public class Ragdoll : MonoBehaviour
         {
             // Except myself
             if (rigi.transform == transform)
-                continue;
-
-            rigi.isKinematic = !state;
+                rigi.isKinematic = state;
+            else
+                rigi.isKinematic = !state;
         }
-        foreach (Collider bone in boneColliders)
+        foreach (Collider coll in boneColliders)
         {
             // Except myself
-            if (bone.transform == transform)
-                continue;
-
-            bone.enabled = state;
+            if (coll.transform == transform)
+                coll.enabled = !state;
+            else
+                coll.enabled = state;
         }
     }
 }
